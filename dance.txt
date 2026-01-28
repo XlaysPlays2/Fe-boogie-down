@@ -1,7 +1,42 @@
 local plr = game.Players.LocalPlayer
-local hum = plr.Character.Humanoid
+local char = plr.Character or plr.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+
 local Anim = Instance.new("Animation")
 Anim.AnimationId = "rbxassetid://140290021376754"
 local track = hum:LoadAnimation(Anim)
-track:Play()
-track:AdjustSpeed(1.524)
+local dancing = false
+
+local function toggleDance()
+    dancing = not dancing
+    if dancing then
+        track:Play()
+        track:AdjustSpeed(1.524)
+        print("Boogie Down: ON")
+    else
+        track:Stop()
+        print("Boogie Down: OFF")
+    end
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+    if not gpe and input.KeyCode == Enum.KeyCode.G then
+        toggleDance()
+    end
+end)
+
+local screenGui = Instance.new("ScreenGui", plr.PlayerGui)
+screenGui.Name = "BoogieGui"
+
+local btn = Instance.new("TextButton", screenGui)
+btn.Size = UDim2.new(0, 100, 0, 50)
+btn.Position = UDim2.new(0.5, -50, 0.8, 0) 
+btn.Text = "Dance Boogie"
+btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+btn.BorderSizePixel = 0
+
+local corner = Instance.new("UICorner", btn)
+corner.CornerRadius = ToolPoint.new(0, 8)
+
+btn.MouseButton1Click:Connect(toggleDance)
